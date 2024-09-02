@@ -1,19 +1,29 @@
 import "./App.css";
-import usersData from "./users.json";
+// import usersData from "./users.json";
 import ContactForm from "./components/ContactForm/ContactForm";
 import ContactList from "./components/ContactList/ContactList";
 import SearchBox from "./components/SearchBox/SearchBox";
 
+import { addContact, deleteContact } from "./redux/contactsSlice";
+import { setFilterValue } from "./redux/filtersSlice";
+
 import { nanoid } from "nanoid";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
 const App = () => {
-  const [users, setUsers] = useState(() => {
-    const localData = localStorage.getItem("users");
+  const dispatch = useDispatch();
 
-    return JSON.parse(localData) ?? usersData;
+  // const [filter, setFilter] = useState("");
+  // const [users, setUsers] = useState(() => {
+  //   const localData = (localStorage.getItem("users"))=> ;
+  //   return JSON.parse(localData) ?? usersData;
+  // });
+  const filter = useSelector((state) => {
+    return state.filter.filters;
   });
-  const [filter, setFilter] = useState("");
+
+  const users = useSelector((state) => state.contacts.items);
 
   useEffect(() => {
     localStorage.setItem("users", JSON.stringify(users));
@@ -24,19 +34,24 @@ const App = () => {
       id: nanoid(),
       ...newUser,
     };
-
-    setUsers(() => {
-      return [finalProfile, ...users];
-    });
+    const action = addContact(finalProfile);
+    dispatch(action);
+    // setUsers(() => {
+    //   return [finalProfile, ...users];
+    // });
   };
 
   const deleteUser = (userId) => {
-    setUsers(users.filter((item) => item.id !== userId));
+    const action = deleteContact(userId);
+    dispatch(action);
+    // setUsers(users.filter((item) => item.id !== userId));
   };
 
   const handleFilter = (event) => {
     const value = event.target.value;
-    setFilter(value);
+    // setFilter(value);
+    const action = setFilterValue(value);
+    dispatch(action);
   };
 
   const filteredUserName = users.filter((user) =>
