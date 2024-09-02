@@ -1,6 +1,18 @@
 import css from "./SearchBox.module.css";
 
-const SearchBox = ({ filter, handleFilter }) => {
+import { useDispatch } from "react-redux";
+
+import { setFilterValue } from "../../redux/filtersSlice";
+
+const SearchBox = () => {
+  const dispatch = useDispatch();
+
+  const handleFilter = (event) => {
+    const value = event.target.value;
+    const action = setFilterValue(value);
+    dispatch(action);
+  };
+
   return (
     <div className={css.searchBox}>
       <p className={css.searchText}>Find contacts by name</p>
@@ -9,7 +21,7 @@ const SearchBox = ({ filter, handleFilter }) => {
           className={css.searchData}
           type="text"
           name="searchBox"
-          value={filter}
+          // value={filter}
           onChange={handleFilter}
         />
       </label>

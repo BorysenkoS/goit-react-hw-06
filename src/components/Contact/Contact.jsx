@@ -1,6 +1,11 @@
 import css from "./Contact.module.css";
 
-const Contact = ({ name, number, deleteUser, userId }) => {
+import { useDispatch } from "react-redux";
+import { deleteContact } from "../../redux/contactsSlice";
+
+const Contact = ({ name, number, userId }) => {
+  const dispatch = useDispatch();
+
   return (
     <div className={css.contact}>
       <div>
@@ -8,7 +13,7 @@ const Contact = ({ name, number, deleteUser, userId }) => {
         <p className={css.contactText}>{number}</p>
       </div>
       <button
-        onClick={() => deleteUser(userId)}
+        onClick={() => dispatch(deleteContact(userId))}
         className={css.contactBtn}
         type="button"
       >

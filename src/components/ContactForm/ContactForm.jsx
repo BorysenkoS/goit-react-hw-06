@@ -3,6 +3,11 @@ import { Field, Form, Formik } from "formik";
 import * as Yup from "yup";
 import { ErrorMessage } from "formik";
 
+import { useDispatch } from "react-redux";
+import { nanoid } from "nanoid";
+
+import { addContact } from "../../redux/contactsSlice";
+
 const initValues = {
   profileName: "",
   profileNumber: "",
@@ -21,14 +26,18 @@ const ProfileValidationSchema = Yup.object().shape({
     .matches(phoneRegExp, "Phone number must be xxx-xx-xx"),
 });
 
-const ContactForm = ({ onAdd }) => {
+const ContactForm = () => {
+  const dispatch = useDispatch();
+
   const handleSubmit = (values, actions) => {
     const profileObj = {
       name: values.profileName,
       number: values.profileNumber,
+      id: nanoid(),
     };
 
-    onAdd(profileObj);
+    const action = addContact(profileObj);
+    dispatch(action);
 
     actions.resetForm();
   };
